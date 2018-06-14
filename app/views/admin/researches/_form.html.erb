@@ -1,15 +1,25 @@
-<%= simple_form_for(@admin_research) do |f| %>
-  <%= f.error_notification %>
+<%= simple_form_for(@research) do |f| %>
 
-  <div class="form-inputs">
-    <%= f.input :title %>
-    <%= f.input :ref %>
-    <%= f.input :abstract %>
-    <%= f.input :link %>
-    <%= f.input :kind %>
-  </div>
+<div class="col s12">
+  <%= f.input :title %>
+</div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
+<div id="box-textarea" class="col s12">
+  <%= f.input :ref, as: :textarea%>
+</div>
+
+<div id="box-textarea" class="col s12">
+  <%= f.input :abstract, as: :textarea %>
+</div>
+
+<div class="col s8">
+  <%= f.input :link %>
+</div>
+<div class="col s4">
+  <%= f.association :research_category%>
+</div>
+
+<div class="col s12">
+  <%= f.button :submit_materialize, cancel: admin_researches_path %>
+</div>
 <% end %>

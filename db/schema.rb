@@ -10,19 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180105223449) do
+ActiveRecord::Schema.define(version: 20180404171108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admin_developers", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "function"
+    t.string "institution"
+    t.string "link"
+    t.boolean "active"
+    t.date "start_on_project"
+    t.date "finish_on_project"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "avatar_file_name"
+    t.string "avatar_content_type"
+    t.integer "avatar_file_size"
+    t.datetime "avatar_updated_at"
+  end
+
+  create_table "admin_research_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "admin_researches", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "ref"
     t.text "abstract"
     t.string "link"
-    t.string "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "research_category_id"
   end
 
   create_table "admins", id: :serial, force: :cascade do |t|
@@ -52,7 +74,6 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.datetime "updated_at", null: false
     t.integer "team_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
-    t.index ["team_id"], name: "index_answers_on_team_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
@@ -79,6 +100,19 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "devs", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "job"
+    t.string "desc"
+    t.string "link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "avatar_file_name"
+    t.string "avatar_content_type"
+    t.integer "avatar_file_size"
+    t.datetime "avatar_updated_at"
+  end
+
   create_table "exercises", id: :serial, force: :cascade do |t|
     t.string "title", null: false
     t.text "content", null: false
@@ -87,12 +121,11 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.integer "lo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["lo_id"], name: "index_exercises_on_lo_id"
   end
 
   create_table "exercises_tags", id: false, force: :cascade do |t|
-    t.bigint "tag_id", null: false
-    t.bigint "exercise_id", null: false
+    t.integer "tag_id", null: false
+    t.integer "exercise_id", null: false
   end
 
   create_table "introductions", id: :serial, force: :cascade do |t|
@@ -102,12 +135,11 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.integer "lo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["lo_id"], name: "index_introductions_on_lo_id"
   end
 
   create_table "introductions_tags", id: false, force: :cascade do |t|
-    t.bigint "tag_id", null: false
-    t.bigint "introduction_id", null: false
+    t.integer "tag_id", null: false
+    t.integer "introduction_id", null: false
   end
 
   create_table "los", id: :serial, force: :cascade do |t|
@@ -118,12 +150,15 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_los_on_user_id"
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   create_table "los_tags", id: false, force: :cascade do |t|
-    t.bigint "tag_id", null: false
-    t.bigint "lo_id", null: false
+    t.integer "tag_id", null: false
+    t.integer "lo_id", null: false
   end
 
   create_table "los_teams", id: :serial, force: :cascade do |t|
@@ -193,7 +228,15 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.integer "exercise_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["exercise_id"], name: "index_questions_on_exercise_id"
+  end
+
+  create_table "researches", id: :serial, force: :cascade do |t|
+    t.string "title"
+    t.text "summary"
+    t.text "reference"
+    t.string "link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
@@ -218,7 +261,6 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "number_of_tries", default: 1
-    t.index ["question_id"], name: "index_tips_on_question_id"
   end
 
   create_table "tips_counts", id: :serial, force: :cascade do |t|
@@ -251,6 +293,10 @@ ActiveRecord::Schema.define(version: 20180105223449) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "avatar_file_name"
+    t.string "avatar_content_type"
+    t.integer "avatar_file_size"
+    t.datetime "avatar_updated_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
