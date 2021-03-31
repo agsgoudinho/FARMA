@@ -89,3 +89,24 @@ CREATE TABLE introductions_versions(
 	lo_version_id INTEGER REFERENCES los_versions(id)
 );
 ```
+
+### introductions_versions
+```sql
+CREATE TABLE introductions_versions(
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(50),
+	content TEXT,
+	introduction_id INTEGER REFERENCES introductions(id),
+	lo_version_id INTEGER REFERENCES los_versions(id)
+);
+```
+### exercises_versions
+```sql
+CREATE TABLE exercises_versions (
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(50),
+	content TEXT,
+	exercise_id INTEGER REFERENCES exercises(id),
+	lo_version_id INTEGER REFERENCES los_versions(id)
+);
+```
