@@ -66,3 +66,15 @@ CREATE TABLE steps(
 	exercise_id INTEGER references exercises(id)
 );
 ```
+
+### los_versions
+```sql
+CREATE TABLE los_versions(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50),
+	description TEXT,
+	user_id INTEGER REFERENCES users(id),
+	team_id INTEGER REFERENCES teams(id),
+	lo_id INTEGER REFERENCES los(id)
+);
+```
