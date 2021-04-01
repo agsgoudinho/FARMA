@@ -67,6 +67,16 @@ CREATE TABLE steps(
 );
 ```
 
+### tips
+```sql
+CREATE TABLE tips(
+	id SERIAL PRIMARY KEY,
+	content VARCHAR(100),
+	number_of_tries INTEGER,
+	step_id INTEGER REFERENCES steps(id)
+);
+```
+
 ### los_versions
 ```sql
 CREATE TABLE los_versions(
