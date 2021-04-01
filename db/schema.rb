@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191103163637) do
+ActiveRecord::Schema.define(version: 20210401010654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,9 @@ ActiveRecord::Schema.define(version: 20191103163637) do
     t.datetime "updated_at", null: false
     t.integer "team_id"
     t.string "answer_tex", null: false
+    t.bigint "steps_version_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
+    t.index ["steps_version_id"], name: "index_answers_on_steps_version_id"
     t.index ["team_id"], name: "index_answers_on_team_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
@@ -88,6 +90,17 @@ ActiveRecord::Schema.define(version: 20191103163637) do
     t.integer "exercise_id", null: false
   end
 
+  create_table "exercises_versions", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.bigint "exercise_id"
+    t.bigint "los_version_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_id"], name: "index_exercises_versions_on_exercise_id"
+    t.index ["los_version_id"], name: "index_exercises_versions_on_los_version_id"
+  end
+
   create_table "introductions", id: :serial, force: :cascade do |t|
     t.string "title", null: false
     t.text "content", null: false
@@ -101,6 +114,17 @@ ActiveRecord::Schema.define(version: 20191103163637) do
   create_table "introductions_tags", id: false, force: :cascade do |t|
     t.integer "tag_id", null: false
     t.integer "introduction_id", null: false
+  end
+
+  create_table "introductions_versions", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.bigint "introduction_id"
+    t.bigint "los_version_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["introduction_id"], name: "index_introductions_versions_on_introduction_id"
+    t.index ["los_version_id"], name: "index_introductions_versions_on_los_version_id"
   end
 
   create_table "los", id: :serial, force: :cascade do |t|
@@ -118,6 +142,19 @@ ActiveRecord::Schema.define(version: 20191103163637) do
   create_table "los_tags", id: false, force: :cascade do |t|
     t.integer "tag_id", null: false
     t.integer "lo_id", null: false
+  end
+
+  create_table "los_versions", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.bigint "user_id"
+    t.bigint "team_id"
+    t.bigint "lo_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lo_id"], name: "index_los_versions_on_lo_id"
+    t.index ["team_id"], name: "index_los_versions_on_team_id"
+    t.index ["user_id"], name: "index_los_versions_on_user_id"
   end
 
   create_table "pictures", force: :cascade do |t|
@@ -182,6 +219,28 @@ ActiveRecord::Schema.define(version: 20191103163637) do
     t.index ["exercise_id"], name: "index_questions_on_exercise_id"
   end
 
+  create_table "steps", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.text "correct_answer"
+    t.bigint "exercise_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_id"], name: "index_steps_on_exercise_id"
+  end
+
+  create_table "steps_versions", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.text "correct_answer"
+    t.bigint "step_id"
+    t.bigint "exercises_version_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercises_version_id"], name: "index_steps_versions_on_exercises_version_id"
+    t.index ["step_id"], name: "index_steps_versions_on_step_id"
+  end
+
   create_table "tags", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -206,7 +265,9 @@ ActiveRecord::Schema.define(version: 20191103163637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "number_of_tries", default: 1
+    t.bigint "step_id"
     t.index ["question_id"], name: "index_tips_on_question_id"
+    t.index ["step_id"], name: "index_tips_on_step_id"
   end
 
   create_table "tips_counts", id: :serial, force: :cascade do |t|
@@ -216,9 +277,22 @@ ActiveRecord::Schema.define(version: 20191103163637) do
     t.integer "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "steps_version_id"
     t.index ["question_id"], name: "index_tips_counts_on_question_id"
+    t.index ["steps_version_id"], name: "index_tips_counts_on_steps_version_id"
     t.index ["team_id"], name: "index_tips_counts_on_team_id"
     t.index ["user_id"], name: "index_tips_counts_on_user_id"
+  end
+
+  create_table "tips_versions", force: :cascade do |t|
+    t.string "content"
+    t.integer "number_of_tries"
+    t.bigint "tip_id"
+    t.bigint "steps_version_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["steps_version_id"], name: "index_tips_versions_on_steps_version_id"
+    t.index ["tip_id"], name: "index_tips_versions_on_tip_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -253,9 +327,17 @@ ActiveRecord::Schema.define(version: 20191103163637) do
   end
 
   add_foreign_key "answers", "questions"
+  add_foreign_key "answers", "steps_versions"
   add_foreign_key "answers", "teams"
   add_foreign_key "answers", "users"
   add_foreign_key "ck_images", "users"
+  add_foreign_key "exercises_versions", "exercises"
+  add_foreign_key "exercises_versions", "los_versions"
+  add_foreign_key "introductions_versions", "introductions"
+  add_foreign_key "introductions_versions", "los_versions"
+  add_foreign_key "los_versions", "los"
+  add_foreign_key "los_versions", "teams"
+  add_foreign_key "los_versions", "users"
   add_foreign_key "progress_exercises", "exercises"
   add_foreign_key "progress_exercises", "teams"
   add_foreign_key "progress_exercises", "users"
@@ -265,11 +347,18 @@ ActiveRecord::Schema.define(version: 20191103163637) do
   add_foreign_key "progress_los", "los"
   add_foreign_key "progress_los", "teams"
   add_foreign_key "progress_los", "users"
+  add_foreign_key "steps", "exercises"
+  add_foreign_key "steps_versions", "exercises_versions"
+  add_foreign_key "steps_versions", "steps"
   add_foreign_key "teams", "los"
   add_foreign_key "teams", "users"
+  add_foreign_key "tips", "steps"
   add_foreign_key "tips_counts", "questions"
+  add_foreign_key "tips_counts", "steps_versions"
   add_foreign_key "tips_counts", "teams"
   add_foreign_key "tips_counts", "users"
+  add_foreign_key "tips_versions", "steps_versions"
+  add_foreign_key "tips_versions", "tips"
   add_foreign_key "users_teams", "teams"
   add_foreign_key "users_teams", "users"
 end
