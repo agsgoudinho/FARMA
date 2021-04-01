@@ -132,3 +132,17 @@ CREATE TABLE tips_versions(
 	step_version_id INTEGER REFERENCES steps_versions(id)
 );
 ```
+### tips_counts
+```sql
+CREATE TABLE tips_counts(
+	id SERIAL PRIMARY KEY,
+	tries INTEGER,
+	step_version_id INTEGER REFERENCES steps_versions(id),
+	user_id INTEGER REFERENCES users(id),
+	team_id INTEGER REFERENCES teams(id)
+);
+```
+### answers
+```sql
+
+```
