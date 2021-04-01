@@ -110,3 +110,14 @@ CREATE TABLE exercises_versions (
 	lo_version_id INTEGER REFERENCES los_versions(id)
 );
 ```
+### steps_versions
+```sql
+CREATE TABLE steps_versions(
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(45),
+	content TEXT,
+	correct_answer TEXT,
+	step_id INTEGER references steps(id),
+	exercise_version_id INTEGER REFERENCES exercises_versions(id)
+);
+```
