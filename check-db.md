@@ -144,5 +144,14 @@ CREATE TABLE tips_counts(
 ```
 ### answers
 ```sql
-
+CREATE TABLE answers(
+	id SERIAL PRIMARY KEY,
+	response TEXT,
+	correct BOOLEAN,
+	attempt_number INTEGER,
+	user_id INTEGER REFERENCES users(id),
+	team_id INTEGER REFERENCES teams(id),
+	step_version_id INTEGER REFERENCES steps_versions(id),
+  last_answers INTEGER[] DEFAULT '{}'::INTEGER[]
+);
 ```
