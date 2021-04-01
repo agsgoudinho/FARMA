@@ -121,3 +121,14 @@ CREATE TABLE steps_versions(
 	exercise_version_id INTEGER REFERENCES exercises_versions(id)
 );
 ```
+
+### tips_versions
+```sql
+CREATE TABLE tips_versions(
+	id SERIAL PRIMARY KEY,
+	content VARCHAR(100),
+	number_of_tries INTEGER,
+	tip_id INTEGER references tips(id),
+	step_version_id INTEGER REFERENCES steps_versions(id)
+);
+```
